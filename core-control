@@ -1,0 +1,109 @@
+#!/bin/bash
+
+# =============================================================================
+# core-control — Main Entry Point
+# =============================================================================
+# Server provisioning and node management tool for AnvoIO core-node.
+#
+# Usage:
+#   core-control                   Launch interactive TUI console
+#   core-control setup             Run server provisioning
+#   core-control harden            OS hardening (SSH, fail2ban, sysctl)
+#   core-control install-docker    Install Docker + ufw-docker
+#   core-control import <file>     Import node inventory
+#   core-control export [file]     Export node inventory
+#   core-control add-node          Interactive add-node wizard
+#   core-control remove-node <n>   Remove a node
+#   core-control status            Show all node statuses
+#   core-control start-all         Start all nodes
+#   core-control stop-all          Stop all nodes
+#   core-control restart-all       Restart all nodes
+#   core-control firewall          Show managed UFW rules
+#   core-control help              Show this help
+# =============================================================================
+
+set -euo pipefail
+
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+# ---------------------------------------------------------------------------
+# Help
+# ---------------------------------------------------------------------------
+show_help() {
+    cat <<'EOF'
+core-control — Server Provisioning & Node Management
+
+Usage:
+  core-control                   Launch interactive TUI console
+  core-control setup             Run server provisioning (sudo required)
+  core-control harden            OS hardening: SSH, fail2ban, sysctl (sudo)
+  core-control install-docker    Install Docker + ufw-docker (sudo)
+  core-control import <file>     Import node inventory from .inv file
+  core-control export [file]     Export nodes to .inv format (stdout if no file)
+  core-control add-node          Interactive add-node wizard
+  core-control remove-node <n>   Remove a registered node
+  core-control status            Show all node statuses
+  core-control start-all         Start all registered nodes
+  core-control stop-all          Stop all registered nodes
+  core-control restart-all       Restart all registered nodes
+  core-control firewall          Show managed UFW rules
+  core-control help              Show this help message
+EOF
+}
+
+# ---------------------------------------------------------------------------
+# Dispatch
+# ---------------------------------------------------------------------------
+case "${1:-}" in
+    ""|console)
+        source "${SCRIPT_DIR}/scripts/lib/cc-common.sh"
+        require_whiptail
+        exec "${SCRIPT_DIR}/scripts/console/main-menu.sh"
+        ;;
+    setup)
+        exec sudo "${SCRIPT_DIR}/setup.sh" "${@:2}"
+        ;;
+    harden)
+        exec sudo "${SCRIPT_DIR}/scripts/server/harden.sh" "${@:2}"
+        ;;
+    install-docker)
+        exec sudo "${SCRIPT_DIR}/scripts/server/install-docker.sh" "${@:2}"
+        ;;
+    import)
+        exec "${SCRIPT_DIR}/scripts/inventory/import.sh" "${@:2}"
+        ;;
+    export)
+        exec "${SCRIPT_DIR}/scripts/inventory/export.sh" "${@:2}"
+        ;;
+    add-node)
+        exec "${SCRIPT_DIR}/scripts/inventory/add-node.sh"
+        ;;
+    remove-node)
+        exec "${SCRIPT_DIR}/scripts/inventory/remove-node.sh" "${@:2}"
+        ;;
+    status)
+        exec "${SCRIPT_DIR}/scripts/console/bulk-actions.sh" status-all
+        ;;
+    start-all)
+        exec "${SCRIPT_DIR}/scripts/console/bulk-actions.sh" start-all
+        ;;
+    stop-all)
+        exec "${SCRIPT_DIR}/scripts/console/bulk-actions.sh" stop-all
+        ;;
+    restart-all)
+        exec "${SCRIPT_DIR}/scripts/console/bulk-actions.sh" restart-all
+        ;;
+    firewall)
+        source "${SCRIPT_DIR}/scripts/lib/cc-common.sh"
+        source "${SCRIPT_DIR}/scripts/lib/ufw-helpers.sh"
+        list_managed_rules
+        ;;
+    help|--help|-h)
+        show_help
+        ;;
+    *)
+        echo "Unknown command: $1" >&2
+        echo "Run 'core-control help' for usage." >&2
+        exit 1
+        ;;
+esac

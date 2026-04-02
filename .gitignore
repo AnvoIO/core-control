@@ -1,0 +1,21 @@
+# Private inventory files (contain keys)
+inventory/*.inv
+
+# Node configurations (contain signature providers with private keys)
+nodes/*/
+
+# Keep directory structure
+!inventory/.gitkeep
+!nodes/.gitkeep
+
+# OS / IDE
+.DS_Store
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Temp files
+*.tmp
+*.bak

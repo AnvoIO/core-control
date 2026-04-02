@@ -53,23 +53,25 @@ apply_node_rules() {
 
     log_info "Applying UFW rules for ${container_name} (${node_role})..."
 
-    # P2P port — always public
-    ufw allow to "$bind_ip" port "$p2p_port" proto tcp \
-        comment "core-control: ${container_name} P2P" >/dev/null 2>&1 || true
-
-    # HTTP API port — role-dependent
+    # Role-dependent rules
     case "$node_role" in
         producer)
-            # Producer API: localhost only (producer_api_plugin is sensitive)
+            # Signing nodes: NO public P2P (they connect outbound to their peers).
+            # HTTP API: localhost only (producer_api_plugin is sensitive).
             if [[ -n "$http_port" ]]; then
                 ufw allow from 127.0.0.1 to "$bind_ip" port "$http_port" proto tcp \
                     comment "core-control: ${container_name} HTTP (local)" >/dev/null 2>&1 || true
             fi
             ;;
         seed)
-            # No HTTP port for seed nodes
+            # Relay nodes: public P2P, no HTTP
+            ufw allow to "$bind_ip" port "$p2p_port" proto tcp \
+                comment "core-control: ${container_name} P2P" >/dev/null 2>&1 || true
             ;;
         light-api|full-api|full-history)
+            # API nodes: public P2P + public HTTP
+            ufw allow to "$bind_ip" port "$p2p_port" proto tcp \
+                comment "core-control: ${container_name} P2P" >/dev/null 2>&1 || true
             if [[ -n "$http_port" ]]; then
                 ufw allow to "$bind_ip" port "$http_port" proto tcp \
                     comment "core-control: ${container_name} HTTP API" >/dev/null 2>&1 || true
@@ -77,8 +79,8 @@ apply_node_rules() {
             ;;
     esac
 
-    # SHiP port (if applicable)
-    if [[ -n "$ship_port" ]]; then
+    # SHiP port (if applicable — API roles only)
+    if [[ -n "$ship_port" && "$node_role" != "producer" ]]; then
         ufw allow to "$bind_ip" port "$ship_port" proto tcp \
             comment "core-control: ${container_name} SHiP" >/dev/null 2>&1 || true
     fi

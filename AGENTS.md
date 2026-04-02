@@ -127,8 +127,8 @@ Fields after SIGNATURE_PROVIDER are optional (defaults applied). Comments start 
 ## UFW Rule Convention
 
 All rules use `comment "core-control: <CONTAINER_NAME> <description>"` for identification. Rules by role:
-- **producer:** P2P public, HTTP localhost-only
-- **seed:** P2P public only (no HTTP)
+- **producer:** HTTP localhost-only, NO public P2P (signing nodes connect outbound to peers)
+- **seed:** P2P public (relay), no HTTP
 - **API roles:** P2P public, HTTP public
 
 ## Key Design Decisions

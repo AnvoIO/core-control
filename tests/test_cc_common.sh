@@ -249,6 +249,7 @@ write_node_config \
     "10.10.10.181" \
     "8888" \
     "9876" \
+    "" \
     "/data/libre/testnet/test-new-node" \
     "standard" \
     "100000" \
@@ -320,6 +321,7 @@ write_node_config \
     "0.0.0.0" \
     "9888" \
     "9876" \
+    "9080" \
     "/data/libre/mainnet/test-api-node" \
     "production" \
     "100000" \

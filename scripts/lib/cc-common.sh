@@ -275,10 +275,10 @@ node_count() {
 # write_node_config — populate a node.conf with all required keys
 # ---------------------------------------------------------------------------
 # Call create_node_conf first to set CONFIG_FILE, then call this function.
-# Arguments are passed as KEY=VALUE environment-style variables:
+# Arguments:
 #   write_node_config container_name network node_role bind_ip http_port \
-#       p2p_port storage_path log_profile snapshot_interval snapshot_retention \
-#       blocks_log_stride max_retained_block_files \
+#       p2p_port ship_port storage_path log_profile snapshot_interval \
+#       snapshot_retention blocks_log_stride max_retained_block_files \
 #       [producer_name] [sig_provider]
 #
 # Reads resource defaults and peers automatically from core-node.
@@ -289,14 +289,15 @@ write_node_config() {
     local wn_bind_ip="$4"
     local wn_http_port="$5"
     local wn_p2p_port="$6"
-    local wn_storage_path="$7"
-    local wn_log_profile="${8:-standard}"
-    local wn_snapshot_interval="${9:-100000}"
-    local wn_snapshot_retention="${10:-10}"
-    local wn_blocks_log_stride="${11:-100000}"
-    local wn_max_retained="${12:-10}"
-    local wn_producer_name="${13:-}"
-    local wn_sig_provider="${14:-}"
+    local wn_ship_port="${7:-}"
+    local wn_storage_path="$8"
+    local wn_log_profile="${9:-standard}"
+    local wn_snapshot_interval="${10:-100000}"
+    local wn_snapshot_retention="${11:-10}"
+    local wn_blocks_log_stride="${12:-100000}"
+    local wn_max_retained="${13:-10}"
+    local wn_producer_name="${14:-}"
+    local wn_sig_provider="${15:-}"
 
     # Ensure CONFIG_FILE is loaded (create_node_conf via $() loses it)
     local wn_conf_path="${NODES_DIR}/${wn_container_name}/node.conf"
@@ -329,6 +330,9 @@ write_node_config() {
     set_config "BIND_IP" "$wn_bind_ip"
     set_config "HTTP_PORT" "$wn_http_port"
     set_config "P2P_PORT" "$wn_p2p_port"
+    if [[ -n "$wn_ship_port" ]]; then
+        set_config "SHIP_PORT" "$wn_ship_port"
+    fi
     set_config "STORAGE_PATH" "$wn_storage_path"
     set_config "STATE_IN_MEMORY" "true"
     set_config "LOG_PROFILE" "$wn_log_profile"

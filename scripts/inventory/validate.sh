@@ -64,7 +64,8 @@ main() {
         local bind_ip="${fields[3]}"
         local http_port="${fields[4]}"
         local p2p_port="${fields[5]}"
-        local producer_name="${fields[6]:-}"
+        local ship_port="${fields[6]:-}"
+        local producer_name="${fields[7]:-}"
 
         # Validate container name
         if [[ -z "$container_name" ]]; then
@@ -114,6 +115,14 @@ main() {
             errors=$((errors + 1))
         fi
 
+        # Validate SHIP_PORT if provided
+        if [[ -n "$ship_port" ]]; then
+            if ! validate_port "$ship_port"; then
+                log_error "Line ${line_num}: Invalid SHIP_PORT '${ship_port}'"
+                errors=$((errors + 1))
+            fi
+        fi
+
         # Check for port conflicts on same bind IP
         local http_key="${bind_ip}:${http_port}"
         local p2p_key="${bind_ip}:${p2p_port}"
@@ -132,13 +141,23 @@ main() {
             seen_ports["$p2p_key"]="$container_name"
         fi
 
+        if [[ -n "$ship_port" ]]; then
+            local ship_key="${bind_ip}:${ship_port}"
+            if [[ -n "${seen_ports[$ship_key]+x}" ]]; then
+                log_error "Line ${line_num}: Port conflict — ${ship_key} already used by ${seen_ports[$ship_key]}"
+                errors=$((errors + 1))
+            else
+                seen_ports["$ship_key"]="$container_name"
+            fi
+        fi
+
         # Producer-specific validation
         if [[ "$node_role" == "producer" ]]; then
             if [[ -z "$producer_name" ]]; then
                 log_error "Line ${line_num}: PRODUCER_NAME required for producer role"
                 errors=$((errors + 1))
             fi
-            local sig_provider="${fields[7]:-}"
+            local sig_provider="${fields[8]:-}"
             if [[ -z "$sig_provider" ]]; then
                 log_error "Line ${line_num}: SIGNATURE_PROVIDER required for producer role"
                 errors=$((errors + 1))

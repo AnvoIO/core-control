@@ -97,12 +97,18 @@ fi
 
 # Ports — defaults from network-defaults.sh
 eval "$(get_default_ports "$network")"
-# HTTP_PORT, P2P_PORT are now set
+# HTTP_PORT, P2P_PORT, SHIP_PORT are now set
 
 if [[ "$node_role" != "seed" ]]; then
     HTTP_PORT="$(cc_inputbox "Add Node" "HTTP API port:" "$HTTP_PORT")" || exit 0
 fi
 P2P_PORT="$(cc_inputbox "Add Node" "P2P port:" "$P2P_PORT")" || exit 0
+
+# SHiP port (full-api and full-history only)
+local ship_port=""
+if [[ "$node_role" == "full-api" || "$node_role" == "full-history" ]]; then
+    ship_port="$(cc_inputbox "Add Node" "State History (SHiP) port:" "${SHIP_PORT:-}")" || exit 0
+fi
 
 # Storage path
 default_storage="${DATA_ROOT}/libre/${network}/${producer_name:-$container_name}"
@@ -152,6 +158,7 @@ write_node_config \
     "$bind_ip" \
     "${HTTP_PORT:-}" \
     "$P2P_PORT" \
+    "$ship_port" \
     "$storage_path" \
     "$log_profile" \
     "100000" \

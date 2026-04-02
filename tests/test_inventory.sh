@@ -95,9 +95,9 @@ echo ""
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/test.inv" <<'INV'
 # Test inventory for integration tests
-test-node-alpha|testnet|producer|10.10.10.181|8881|9871|alpha|PUB_K1_aaa=KEY:PVT_K1_aaa|standard|50000|5
-test-node-beta|testnet|producer|10.10.10.181|8882|9872|beta|PUB_K1_bbb=KEY:PVT_K1_bbb|production|100000|10
-test-node-gamma|mainnet|producer|10.10.10.182|8880|9870|gamma|PUB_K1_ccc=KEY:PVT_K1_ccc
+test-node-alpha|testnet|producer|10.10.10.181|8881|9871||alpha|PUB_K1_aaa=KEY:PVT_K1_aaa|standard|50000|5
+test-node-beta|testnet|producer|10.10.10.181|8882|9872||beta|PUB_K1_bbb=KEY:PVT_K1_bbb|production|100000|10
+test-node-gamma|mainnet|producer|10.10.10.182|8880|9870||gamma|PUB_K1_ccc=KEY:PVT_K1_ccc
 INV
 
 # -------------------------------------------------------------------------
@@ -312,13 +312,13 @@ else
 fi
 
 # Verify key fields survive round-trip
-if grep -q "test-node-alpha|testnet|producer|10.10.10.181|8881|9871|alpha|" "$export_file"; then
+if grep -q "test-node-alpha|testnet|producer|10.10.10.181|8881|9871||alpha|" "$export_file"; then
     pass "Export preserves alpha node fields"
 else
     fail "Export alpha node fields incorrect"
 fi
 
-if grep -q "test-node-gamma|mainnet|producer|10.10.10.182|8880|9870|gamma|" "$export_file"; then
+if grep -q "test-node-gamma|mainnet|producer|10.10.10.182|8880|9870||gamma|" "$export_file"; then
     pass "Export preserves gamma node fields"
 else
     fail "Export gamma node fields incorrect"

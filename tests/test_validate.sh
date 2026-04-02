@@ -38,7 +38,7 @@ echo "--- Valid Inventories ---"
 
 cat > "${WORK_DIR}/valid_minimal.inv" <<'INV'
 # Test inventory
-libre-testnet-potato1|testnet|producer|10.10.10.181|8881|9871|potato1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-potato1|testnet|producer|10.10.10.181|8881|9871||potato1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_minimal.inv" >/dev/null 2>&1; then
@@ -51,9 +51,9 @@ fi
 # Test: Valid multi-node inventory
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/valid_multi.inv" <<'INV'
-libre-testnet-potato1|testnet|producer|10.10.10.181|8881|9871|potato1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-testnet-potato2|testnet|producer|10.10.10.181|8882|9872|potato2|PUB_K1_bbb=KEY:PVT_K1_bbb
-libre-mainnet-crypto|mainnet|producer|10.10.10.182|8880|9870|cryptobloks|PUB_K1_ccc=KEY:PVT_K1_ccc
+libre-testnet-potato1|testnet|producer|10.10.10.181|8881|9871||potato1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-testnet-potato2|testnet|producer|10.10.10.181|8882|9872||potato2|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-mainnet-crypto|mainnet|producer|10.10.10.182|8880|9870||cryptobloks|PUB_K1_ccc=KEY:PVT_K1_ccc
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_multi.inv" >/dev/null 2>&1; then
@@ -66,7 +66,7 @@ fi
 # Test: Valid inventory with optional fields
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/valid_optional.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx|production|50000|5|20|200000
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx|production|50000|5|20|200000
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_optional.inv" >/dev/null 2>&1; then
@@ -82,10 +82,10 @@ cat > "${WORK_DIR}/valid_comments.inv" <<'INV'
 # This is a comment
 # Another comment
 
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 
 # More comments between entries
-libre-testnet-p2|testnet|producer|10.10.10.181|8882|9872|p2|PUB_K1_yyy=KEY:PVT_K1_yyy
+libre-testnet-p2|testnet|producer|10.10.10.181|8882|9872||p2|PUB_K1_yyy=KEY:PVT_K1_yyy
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_comments.inv" >/dev/null 2>&1; then
@@ -98,7 +98,7 @@ fi
 # Test: Valid seed node (no HTTP port needed)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/valid_seed.inv" <<'INV'
-libre-testnet-seed1|testnet|seed|10.10.10.181||9871||
+libre-testnet-seed1|testnet|seed|10.10.10.181||9871|||
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_seed.inv" >/dev/null 2>&1; then
@@ -111,9 +111,9 @@ fi
 # Test: Valid non-producer roles
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/valid_roles.inv" <<'INV'
-libre-testnet-api|testnet|light-api|10.10.10.181|8881|9871||
-libre-testnet-full|testnet|full-api|10.10.10.181|8882|9872||
-libre-testnet-hist|testnet|full-history|10.10.10.181|8883|9873||
+libre-testnet-api|testnet|light-api|10.10.10.181|8881|9871|||
+libre-testnet-full|testnet|full-api|10.10.10.181|8882|9872|||
+libre-testnet-hist|testnet|full-history|10.10.10.181|8883|9873|||
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_roles.inv" >/dev/null 2>&1; then
@@ -142,7 +142,7 @@ fi
 # Test: Invalid network
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_network.inv" <<'INV'
-libre-devnet-p1|devnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-devnet-p1|devnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_network.inv" >/dev/null 2>&1; then
@@ -168,7 +168,7 @@ fi
 # Test: Invalid IP address
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_ip.inv" <<'INV'
-libre-testnet-p1|testnet|producer|999.999.999.999|8881|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-p1|testnet|producer|999.999.999.999|8881|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_ip.inv" >/dev/null 2>&1; then
@@ -181,7 +181,7 @@ fi
 # Test: Invalid port (out of range)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_port.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|99999|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-p1|testnet|producer|10.10.10.181|99999|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_port.inv" >/dev/null 2>&1; then
@@ -194,7 +194,7 @@ fi
 # Test: Invalid port (non-numeric)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_port_nan.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|abc|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-p1|testnet|producer|10.10.10.181|abc|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_port_nan.inv" >/dev/null 2>&1; then
@@ -207,8 +207,8 @@ fi
 # Test: Duplicate container names
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_dup_name.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-testnet-p1|testnet|producer|10.10.10.181|8882|9872|p2|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-testnet-p1|testnet|producer|10.10.10.181|8882|9872||p2|PUB_K1_bbb=KEY:PVT_K1_bbb
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_dup_name.inv" >/dev/null 2>&1; then
@@ -221,8 +221,8 @@ fi
 # Test: Port conflict on same bind IP (HTTP)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_port_conflict_http.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-testnet-p2|testnet|producer|10.10.10.181|8881|9872|p2|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-testnet-p2|testnet|producer|10.10.10.181|8881|9872||p2|PUB_K1_bbb=KEY:PVT_K1_bbb
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_port_conflict_http.inv" >/dev/null 2>&1; then
@@ -235,8 +235,8 @@ fi
 # Test: Port conflict on same bind IP (P2P)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_port_conflict_p2p.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-testnet-p2|testnet|producer|10.10.10.181|8882|9871|p2|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-testnet-p2|testnet|producer|10.10.10.181|8882|9871||p2|PUB_K1_bbb=KEY:PVT_K1_bbb
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_port_conflict_p2p.inv" >/dev/null 2>&1; then
@@ -249,8 +249,8 @@ fi
 # Test: Cross-type port conflict (HTTP vs P2P on same IP)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_port_cross.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-testnet-p2|testnet|producer|10.10.10.181|9871|9872|p2|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-testnet-p2|testnet|producer|10.10.10.181|9871|9872||p2|PUB_K1_bbb=KEY:PVT_K1_bbb
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_port_cross.inv" >/dev/null 2>&1; then
@@ -263,8 +263,8 @@ fi
 # Test: Same ports on DIFFERENT IPs should be OK
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/valid_same_port_diff_ip.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8880|9870|p1|PUB_K1_aaa=KEY:PVT_K1_aaa
-libre-mainnet-p1|mainnet|producer|10.10.10.182|8880|9870|p1m|PUB_K1_bbb=KEY:PVT_K1_bbb
+libre-testnet-p1|testnet|producer|10.10.10.181|8880|9870||p1|PUB_K1_aaa=KEY:PVT_K1_aaa
+libre-mainnet-p1|mainnet|producer|10.10.10.182|8880|9870||p1m|PUB_K1_bbb=KEY:PVT_K1_bbb
 INV
 
 if "$VALIDATE" "${WORK_DIR}/valid_same_port_diff_ip.inv" >/dev/null 2>&1; then
@@ -277,7 +277,7 @@ fi
 # Test: Producer missing producer name
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_no_producer_name.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||PUB_K1_xxx=KEY:PVT_K1_xxx
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|||PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_no_producer_name.inv" >/dev/null 2>&1; then
@@ -290,7 +290,7 @@ fi
 # Test: Producer missing signature provider
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_no_sig.inv" <<'INV'
-libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871|p1|
+libre-testnet-p1|testnet|producer|10.10.10.181|8881|9871||p1|
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_no_sig.inv" >/dev/null 2>&1; then
@@ -303,7 +303,7 @@ fi
 # Test: Invalid container name (starts with hyphen)
 # -------------------------------------------------------------------------
 cat > "${WORK_DIR}/invalid_name.inv" <<'INV'
--bad-name|testnet|producer|10.10.10.181|8881|9871|p1|PUB_K1_xxx=KEY:PVT_K1_xxx
+-bad-name|testnet|producer|10.10.10.181|8881|9871||p1|PUB_K1_xxx=KEY:PVT_K1_xxx
 INV
 
 if "$VALIDATE" "${WORK_DIR}/invalid_name.inv" >/dev/null 2>&1; then

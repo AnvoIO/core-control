@@ -7,7 +7,7 @@
 # for each node. This is the core data pipeline.
 #
 # Inventory format (pipe-delimited):
-#   CONTAINER_NAME|NETWORK|NODE_ROLE|BIND_IP|HTTP_PORT|P2P_PORT|PRODUCER_NAME|SIGNATURE_PROVIDER|LOG_PROFILE|SNAPSHOT_INTERVAL|SNAPSHOT_RETENTION|MAX_RETAINED_BLOCK_FILES|BLOCKS_LOG_STRIDE
+#   CONTAINER_NAME|NETWORK|NODE_ROLE|BIND_IP|HTTP_PORT|P2P_PORT|SHIP_PORT|PRODUCER_NAME|SIGNATURE_PROVIDER|LOG_PROFILE|SNAPSHOT_INTERVAL|SNAPSHOT_RETENTION|MAX_RETAINED_BLOCK_FILES|BLOCKS_LOG_STRIDE
 #
 # Fields after SIGNATURE_PROVIDER are optional (defaults applied).
 # Lines starting with # are comments. Blank lines are skipped.
@@ -88,13 +88,14 @@ while IFS= read -r line; do
     local_bind_ip="${fields[3]}"
     local_http_port="${fields[4]}"
     local_p2p_port="${fields[5]}"
-    local_producer_name="${fields[6]:-}"
-    local_sig_provider="${fields[7]:-}"
-    local_log_profile="${fields[8]:-standard}"
-    local_snapshot_interval="${fields[9]:-100000}"
-    local_snapshot_retention="${fields[10]:-10}"
-    local_max_retained_block_files="${fields[11]:-10}"
-    local_blocks_log_stride="${fields[12]:-100000}"
+    local_ship_port="${fields[6]:-}"
+    local_producer_name="${fields[7]:-}"
+    local_sig_provider="${fields[8]:-}"
+    local_log_profile="${fields[9]:-standard}"
+    local_snapshot_interval="${fields[10]:-100000}"
+    local_snapshot_retention="${fields[11]:-10}"
+    local_max_retained_block_files="${fields[12]:-10}"
+    local_blocks_log_stride="${fields[13]:-100000}"
 
     # Default empty optional fields
     [[ -z "$local_log_profile" ]] && local_log_profile="standard"
@@ -126,6 +127,7 @@ while IFS= read -r line; do
         "$local_bind_ip" \
         "$local_http_port" \
         "$local_p2p_port" \
+        "$local_ship_port" \
         "$local_storage_path" \
         "$local_log_profile" \
         "$local_snapshot_interval" \

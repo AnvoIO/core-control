@@ -251,7 +251,7 @@ load_peers() {
 
     local peers=""
     local line
-    while IFS= read -r line; do
+    while IFS= read -r line || [[ -n "$line" ]]; do
         [[ "$line" =~ ^#.*$ || -z "$line" ]] && continue
         local addr
         addr="$(echo "$line" | cut -d'|' -f2)"

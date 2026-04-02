@@ -129,7 +129,7 @@ Fields after SIGNATURE_PROVIDER are optional (defaults applied). Comments start 
 All rules use `comment "core-control: <CONTAINER_NAME> <description>"` for identification. Rules by role:
 - **producer:** HTTP localhost-only, NO public P2P (signing nodes connect outbound to peers)
 - **seed:** P2P public (relay), no HTTP
-- **API roles:** P2P public, HTTP public
+- **API roles:** P2P public, HTTP public, SHiP public (if SHIP_PORT set)
 
 ## Key Design Decisions
 

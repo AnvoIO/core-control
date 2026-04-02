@@ -98,10 +98,9 @@ Import auto-derives: CORE_VERSION, STORAGE_PATH, STATE_IN_MEMORY, resource tunin
 ## Firewall
 
 UFW rules are applied per-node based on role:
-- **P2P ports**: Always public (blockchain peering)
-- **HTTP API (producer)**: Localhost only (producer_api_plugin is sensitive)
-- **HTTP API (API roles)**: Public
-- **Seed nodes**: P2P only (no HTTP)
+- **Producer nodes**: HTTP localhost-only, NO public P2P (signing nodes connect outbound to peers)
+- **Seed nodes**: P2P public (relay), no HTTP
+- **API roles** (light-api, full-api, full-history): P2P public, HTTP public, SHiP public (if configured)
 
 All managed rules are tagged with `core-control:` comments for identification. View with:
 ```bash
